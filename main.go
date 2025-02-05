@@ -7,7 +7,6 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"sort"
@@ -406,7 +405,7 @@ func execTest(threadCount int, payloadSize uint64, runNumber int, csvRecords [][
 				}
 
 				// measure the first byte latency
-				firstByte := time.Now().Sub(latencyTimer)
+				firstByte := time.Since(latencyTimer)
 
 				// create a buffer to copy the S3 object body to
 				var buf = make([]byte, payloadSize)
@@ -431,7 +430,7 @@ func execTest(threadCount int, payloadSize uint64, runNumber int, csvRecords [][
 				_ = resp.Body.Close()
 
 				// measure the last byte latency
-				lastByte := time.Now().Sub(latencyTimer)
+				lastByte := time.Since(latencyTimer)
 
 				// add the latency result to the results channel
 				results <- latency{FirstByte: firstByte, LastByte: lastByte}
@@ -469,7 +468,7 @@ func execTest(threadCount int, payloadSize uint64, runNumber int, csvRecords [][
 	}
 
 	// stop the timer for this benchmark
-	totalTime := time.Now().Sub(benchmarkTimer)
+	totalTime := time.Since(benchmarkTimer)
 
 	// calculate the summary statistics for the first byte latencies
 	sort.Sort(ByFirstByte(benchmarkRecord.dataPoints))
@@ -641,7 +640,7 @@ func getRegion() string {
 		return defaultRegion
 	}
 
-	content, _ := ioutil.ReadAll(response.Body)
+	content, _ := io.ReadAll(response.Body)
 	_ = response.Body.Close()
 
 	az := string(content)
@@ -661,7 +660,7 @@ func getInstanceType() string {
 		return ""
 	}
 
-	content, _ := ioutil.ReadAll(response.Body)
+	content, _ := io.ReadAll(response.Body)
 	_ = response.Body.Close()
 
 	return string(content)
@@ -679,7 +678,7 @@ func getInstanceId() string {
 		return ""
 	}
 
-	content, _ := ioutil.ReadAll(response.Body)
+	content, _ := io.ReadAll(response.Body)
 	_ = response.Body.Close()
 
 	return string(content)

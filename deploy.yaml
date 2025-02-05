@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: debug2
+spec:
+  selector:
+    matchLabels:
+      app: debug2
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: debug2
+    spec:
+      containers:
+      - name: debug2
+        image: golang:1.23
+        command: ["sleep", "infinity"]        
