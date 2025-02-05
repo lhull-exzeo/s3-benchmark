@@ -1,4 +1,4 @@
-module github.com/dvassallo/s3-benchmark
+module github.com/lhull-exzeo/s3-benchmark
 
 go 1.13
 

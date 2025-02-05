@@ -6,10 +6,6 @@ import (
 	"encoding/csv"
 	"flag"
 	"fmt"
-	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/aws/external"
-	"github.com/aws/aws-sdk-go-v2/service/s3"
-	"github.com/schollz/progressbar/v2"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -17,6 +13,11 @@ import (
 	"sort"
 	"strings"
 	"time"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/aws/external"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/schollz/progressbar/v2"
 )
 
 // represents the duration from making an S3 GetObject request to getting the first byte and last byte
@@ -53,7 +54,7 @@ const maxPayload = 18
 const maxThreads = 64
 
 // default settings
-const defaultRegion = "us-west-2"
+const defaultRegion = "us-east-1"
 const bucketNamePrefix = "s3-benchmark"
 
 // the hostname or EC2 instance id
@@ -136,7 +137,7 @@ func parseFlags() {
 	cleanupArg := flag.Bool("cleanup", false, "Cleans all the objects uploaded to S3 for this test.")
 	csvResultsArg := flag.String("upload-csv", "", "Uploads the test results to S3 as a CSV file.")
 	createBucketArg := flag.Bool("create-bucket", true, "Create the bucket")
-	
+
 	// parse the arguments and set all the global variables accordingly
 	flag.Parse()
 
@@ -227,7 +228,7 @@ func setup() {
 			},
 		})
 
-		// AWS S3 has this peculiar issue in which if you want to create bucket in us-east-1 region, you should NOT specify 
+		// AWS S3 has this peculiar issue in which if you want to create bucket in us-east-1 region, you should NOT specify
 		// any location constraint. https://github.com/boto/boto3/issues/125
 		if strings.ToLower(region) == "us-east-1" {
 			createBucketReq = s3Client.CreateBucketRequest(&s3.CreateBucketInput{
@@ -240,7 +241,7 @@ func setup() {
 		// if the error is because the bucket already exists, ignore the error
 		if err != nil && !strings.Contains(err.Error(), "BucketAlreadyOwnedByYou:") {
 			panic("Failed to create S3 bucket: " + err.Error())
-		}	
+		}
 	}
 
 	// an object size iterator that starts from 1 KB and doubles the size on every iteration
