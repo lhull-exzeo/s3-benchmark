@@ -60,7 +60,7 @@ const bucketNamePrefix = "s3-benchmark"
 var hostname = getHostname()
 
 // the EC2 instance region if available
-var region = getRegion()
+var region = "us-east-1"
 
 // the endpoint URL if applicable
 var endpoint string
