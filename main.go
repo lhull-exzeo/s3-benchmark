@@ -645,6 +645,8 @@ func getRegion() string {
 
 	az := string(content)
 
+	fmt.Print(az)
+
 	return az[:len(az)-1]
 }
 
